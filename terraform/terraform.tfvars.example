@@ -1,0 +1,22 @@
+# Copy this file to terraform.tfvars and adjust values if needed.
+aws_region       = "us-east-1"
+aws_profile      = null
+cluster_name     = "dev-cluster"
+environment      = "dev"
+
+# Set to true only when you really want to create instances.
+enable_cluster   = true
+
+# Keep this low to reduce costs.
+instance_count   = 1
+instance_type    = "t3.micro"
+
+# k3s bootstrap (single-node dev cluster)
+enable_k3s       = true
+k3s_version      = "v1.30.2+k3s1"
+# k3s_token      = null
+
+# Keep false unless SSH is needed.
+allow_ssh        = false
+ssh_allowed_cidrs = ["0.0.0.0/0"]
+# ssh_key_name   = "your-aws-keypair-name"
