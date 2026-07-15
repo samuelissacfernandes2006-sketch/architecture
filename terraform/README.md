@@ -15,21 +15,9 @@ It does not create EKS, load balancer, NAT gateway, or databases.
 
 ## Why this is cost-aware
 
-- `enable_cluster = false` by default
-- `instance_count` is limited to 1..2
-- `instance_type` is set to `t3.micro` for this setup
-- Root disk is 8 GB and `delete_on_termination = true`
-- SSH is closed by default (`allow_ssh = false`)
 
 ## Files explained
 
-- `terraform.tf`: Terraform and provider versions
-- `main.tf`: Provider, AMI lookup, network defaults, security group, EC2 nodes
-- `variables.tf`: Input variables and cost guardrails
-- `outputs.tf`: Useful outputs after apply
-- `terraform.tfvars`: Your local values
-- `check_post_destroy.sh`: Post-destroy checklist to verify possible billable leftovers
-- `scripts/k3s-init.sh.tpl`: Instance bootstrap script template that installs k3s
 
 ## Recommended workflow
 
@@ -49,9 +37,6 @@ If your profile name is not `default`, replace it in the command.
 
 3. Review your variables in `terraform.tfvars`:
 
-- Keep `instance_count = 1`
-- Keep `instance_type = "t3.micro"`
-- Keep `allow_ssh = false` unless needed
 
 4. Create resources:
 
@@ -84,9 +69,6 @@ The EC2 instance runs `user_data` during first boot, using the template at `scri
 
 Variables to control bootstrap:
 
-- `enable_k3s = true`: enables k3s installation
-- `k3s_version = "v1.30.2+k3s1"`: pins k3s version for reproducibility
-- `k3s_token = null`: optional token override (sensitive variable)
 
 After `terraform apply`, validate bootstrap on the instance:
 
@@ -122,12 +104,6 @@ Reason: Terraform provider uses SDK-compatible environment credentials, while AW
 
 ## How to read main.tf quickly
 
-- Provider region comes from variable `aws_region`.
-- Ubuntu AMI is discovered dynamically with `data "aws_ami"`.
-- Default VPC and default subnet are reused to keep network simple.
-- Security group opens only egress by default.
-- SSH ingress is optional and controlled by `allow_ssh`.
-- EC2 count depends on `enable_cluster` and `instance_count`.
 
 Formula used in resource count:
 
@@ -137,12 +113,7 @@ $$
 
 That means:
 
-- If `enable_cluster = false`, nothing is created.
 - If `enable_cluster = true`, instances are created according to `instance_count`.
 
-## Important billing notes
-
-- Free tier has monthly limits. If you exceed limits, charges can happen.
-- Stopped instances can still keep EBS volumes billable.
 - Allocated Elastic IP without running instance can be billed.
 - Always run `terraform destroy` and then `./check_post_destroy.sh`.

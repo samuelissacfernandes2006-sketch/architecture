@@ -23,12 +23,6 @@ variable "environment" {
   default     = "dev"
 }
 
-variable "enable_cluster" {
-  description = "Safety switch to avoid accidental creation"
-  type        = bool
-  default     = false
-}
-
 variable "instance_count" {
   description = "Number of EC2 instances in the dev cluster"
   type        = number
@@ -101,4 +95,24 @@ variable "argocd_namespace" {
   description = "argocd namespace on installation"
   type        = string
   default     = "argocd"
+}
+
+variable "ami_id" {
+  description = "AMI ID used by EC2 instances"
+  type        = string
+}
+
+variable "subnet_id" {
+  description = "Subnet ID where EC2 instances will be created"
+  type        = string
+}
+
+variable "vpc_security_group_ids" {
+  description = "Security groups attached to EC2 instances"
+  type        = list(string)
+}
+
+variable "user_data" {
+  description = "Rendered user_data script for instance bootstrap"
+  type        = string
 }
