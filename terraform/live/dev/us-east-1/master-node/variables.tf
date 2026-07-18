@@ -58,10 +58,11 @@ variable "ssh_key_name" {
   default     = null
   nullable    = true
 
-  validation {
-    condition     = var.allow_ssh ? (var.ssh_key_name != null && length(trimspace(var.ssh_key_name)) > 0) : true
-    error_message = "When allow_ssh is true, set ssh_key_name to an existing AWS Key Pair name."
-  }
+}
+
+variable "node_type" {
+  description = "Type of the node"
+  type        = string  
 }
 
 variable "enable_k3s" {
@@ -94,4 +95,14 @@ variable "argocd_namespace" {
   description = "argocd namespace on installation"
   type        = string
   default     = "argocd"
+}
+
+variable "load_balancer_type" {
+  description = "Load balancer type"
+  type = string 
+}
+
+variable "load_balancer_internal" {
+  description = "If the load balancer is internal or not"
+  type = bool
 }
