@@ -38,7 +38,6 @@ variable "instance_type" {
   description = "EC2 instance type (prefer free-tier eligible values)"
   type        = string
   default     = "t3.micro"
-
 }
 
 variable "allow_ssh" {
@@ -58,10 +57,7 @@ variable "ssh_key_name" {
   type        = string
   default     = null
   nullable    = true
-  validation {
-    condition     = var.allow_ssh ? (var.ssh_key_name != null && length(trimspace(var.ssh_key_name)) > 0) : true
-    error_message = "When allow_ssh is true, set ssh_key_name to an existing AWS Key Pair name."
-  }
+
 }
 
 variable "enable_k3s" {
@@ -74,11 +70,6 @@ variable "k3s_version" {
   description = "k3s version channel or pinned release"
   type        = string
   default     = "v1.35.0+k3s3"
-}
-
-variable "node_type" {
-  description = "Type of the node"
-  type        = string  
 }
 
 variable "k3s_token" {
@@ -101,22 +92,16 @@ variable "argocd_namespace" {
   default     = "argocd"
 }
 
-variable "ami_id" {
-  description = "AMI ID used by EC2 instances"
-  type        = string
+
+
+variable "node_type" {
+  description = "Type of the node"
+  type        = string  
+  nullable = false
 }
 
-variable "subnet_id" {
-  description = "Subnet ID where EC2 instances will be created"
-  type        = string
-}
-
-variable "vpc_security_group_ids" {
-  description = "Security groups attached to EC2 instances"
-  type        = list(string)
-}
-
-variable "user_data" {
-  description = "Rendered user_data script for instance bootstrap"
-  type        = string
+variable "master_nodes_dns" {
+  description = "Load balancer DNS for master nodes" 
+  type = string
+  nullable = false
 }

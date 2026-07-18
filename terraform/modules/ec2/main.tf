@@ -21,7 +21,7 @@ resource "aws_instance" "aws_instance" {
   user_data_replace_on_change = true
 
   tags = {
-    Name        = "${var.cluster_name}-node-${count.index + 1}"
+    Name        = "${var.cluster_name}-${var.node_type}-${count.index + 1}"
     Environment = var.environment
     ManagedBy   = "terraform"
   }
